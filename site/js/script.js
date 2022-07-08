@@ -60,16 +60,24 @@ var switchMenuToActive = function () {
   }
 };
 
-
+// On page load (before images or CSS)
 document.addEventListener("DOMContentLoaded", function (event) {
+
+
+
+// *** start ***
+// On first load, show home view
 showLoading("#main-content");
 $ajaxUtils.sendGetRequest(
   allCategoriesUrl,
-  function (request) {
-    buildAndShowHomeHTML(request);
-  },
-  true);
+  buildAndShowHomeHTML, // ***** <---- TODO: STEP 1: Substitute [...] ******
+  true); // Explicitely setting the flag to get JSON from server processed into an object literal
 });
+// *** finish **
+
+
+// Builds HTML for the home page based on categories array
+// returned from the server.
 function buildAndShowHomeHTML (categories) {
 
   // Load home snippet page
@@ -78,10 +86,12 @@ function buildAndShowHomeHTML (categories) {
     function (homeHtml) {
 
       var chosenCategoryShortName = chooseRandomCategory(categories).short_name;
-      var homeHtmlToInsertIntoMainPage = insertProperty(homeHtml, "randomCategoryShortName", "'" + chosenCategoryShortName + "'");
 
 
-      insertHtml("#main-content", homeHtmlToInsertIntoMainPage)
+      chosenCategoryShortName = "'" + chosenCategoryShortName + "'";
+      var homeHtmlToInsertIntoMainPage = insertProperty(homeHtml, "randomCategoryShortName", chosenCategoryShortName);
+
+      insertHtml('#main-content', homeHtmlToInsertIntoMainPage);
 
     },
     false);
